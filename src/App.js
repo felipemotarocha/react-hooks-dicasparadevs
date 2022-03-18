@@ -1,48 +1,19 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState, useRef } from "react";
 
 const App = () => {
-  const [items, setItems] = useState([]);
-  const [resourceType, setResourceType] = useState("posts");
+  const [name, setName] = useState("");
+
+  const renders = useRef(0);
 
   useEffect(() => {
-    const fetchResourceTypes = async () => {
-      const response = await fetch(
-        `https://jsonplaceholder.typicode.com/${resourceType}`
-      );
-      const responseJSON = await response.json();
-
-      setItems(responseJSON);
-    };
-
-    // fetchResourceTypes();
-  }, [resourceType]);
-
-  useEffect(() => {
-    // componentDidMount
-    console.log("componentDidMount");
-
-    return () => {
-      // componentWillUnmount
-      console.log("componentWillUnmount");
-    };
-  }, []);
-
-  const changeResourceType = (resourceType) => {
-    setResourceType(resourceType);
-  };
+    renders.current = renders.current + 1;
+  });
 
   return (
     <div>
-      <h1>{resourceType}</h1>
-      <div style={{ display: "flex", alignItems: "center" }}>
-        <button onClick={() => changeResourceType("posts")}>Posts</button>
-        <button onClick={() => changeResourceType("comments")}>Comments</button>
-        <button onClick={() => changeResourceType("todos")}>Todos</button>
-      </div>
-
-      {items.map((item) => (
-        <p>{item.id}</p>
-      ))}
+      <input value={name} onChange={(e) => setName(e.target.value)} />
+      <p>Hello! My name is {name}</p>
+      <p>Renders: {renders.current}</p>
     </div>
   );
 };
