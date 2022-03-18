@@ -1,17 +1,48 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 const App = () => {
-  const [count, setCount] = useState(0);
-  const [theme, setTheme] = useState("dark");
+  const [items, setItems] = useState([]);
+  const [resourceType, setResourceType] = useState("posts");
 
-  const incrementCount = () => {
-    setCount((prevState) => prevState + 1);
+  useEffect(() => {
+    const fetchResourceTypes = async () => {
+      const response = await fetch(
+        `https://jsonplaceholder.typicode.com/${resourceType}`
+      );
+      const responseJSON = await response.json();
+
+      setItems(responseJSON);
+    };
+
+    // fetchResourceTypes();
+  }, [resourceType]);
+
+  useEffect(() => {
+    // componentDidMount
+    console.log("componentDidMount");
+
+    return () => {
+      // componentWillUnmount
+      console.log("componentWillUnmount");
+    };
+  }, []);
+
+  const changeResourceType = (resourceType) => {
+    setResourceType(resourceType);
   };
 
   return (
     <div>
-      <h1>{count}</h1>
-      <button onClick={incrementCount}>Increment</button>
+      <h1>{resourceType}</h1>
+      <div style={{ display: "flex", alignItems: "center" }}>
+        <button onClick={() => changeResourceType("posts")}>Posts</button>
+        <button onClick={() => changeResourceType("comments")}>Comments</button>
+        <button onClick={() => changeResourceType("todos")}>Todos</button>
+      </div>
+
+      {items.map((item) => (
+        <p>{item.id}</p>
+      ))}
     </div>
   );
 };
