@@ -3,21 +3,17 @@ import { useEffect, useState, useRef } from "react";
 const App = () => {
   const [name, setName] = useState("");
 
-  const inputRef = useRef();
+  const previousName = useRef();
 
-  const focusInput = () => {
-    inputRef.current.focus();
-  };
+  useEffect(() => {
+    previousName.current = name;
+  }, [name]);
 
   return (
     <div>
-      <input
-        ref={inputRef}
-        value={name}
-        onChange={(e) => setName(e.target.value)}
-      />
+      <input value={name} onChange={(e) => setName(e.target.value)} />
       <p>Hello! My name is {name}</p>
-      <button onClick={focusInput}>Focus Input</button>
+      <p>And my name was {previousName.current}</p>
     </div>
   );
 };
