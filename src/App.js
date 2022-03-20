@@ -1,14 +1,17 @@
-import ThemeContextProvider from "./contexts/theme-context";
-import Greeting from "./Greeting";
-
-import Message from "./Message";
+import { useLayoutEffect, useState } from "react";
 
 const App = () => {
+  const [count, setCount] = useState(1);
+
+  useLayoutEffect(() => {
+    console.log(count);
+  }, [count]);
+
   return (
-    <ThemeContextProvider>
-      <Message />
-      <Greeting />
-    </ThemeContextProvider>
+    <>
+      <h1>{count}</h1>
+      <button onClick={() => setCount((prev) => prev + 1)}>Increment</button>
+    </>
   );
 };
 
