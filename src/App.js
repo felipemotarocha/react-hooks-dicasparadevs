@@ -1,35 +1,14 @@
-import { useState, useCallback } from "react";
+import ThemeContextProvider from "./contexts/theme-context";
+import Greeting from "./Greeting";
 
-import List from "./List";
+import Message from "./Message";
 
 const App = () => {
-  const [text, setText] = useState("");
-  const [resourceType, setResourceType] = useState("posts");
-
-  const getItems = useCallback(
-    async (number) => {
-      console.log("getItems is being called!");
-      console.log({ number });
-      const response = await fetch(
-        `https://jsonplaceholder.typicode.com/${resourceType}`
-      );
-      const responseJSON = await response.json();
-
-      return responseJSON;
-    },
-    [resourceType]
-  );
-
   return (
-    <div>
-      <input value={text} onChange={(e) => setText(e.target.value)} />
-
-      <button onClick={() => setResourceType("posts")}>Posts</button>
-      <button onClick={() => setResourceType("comments")}>Comments</button>
-      <button onClick={() => setResourceType("todos")}>Todos</button>
-
-      <List getItems={getItems} />
-    </div>
+    <ThemeContextProvider>
+      <Message />
+      <Greeting />
+    </ThemeContextProvider>
   );
 };
 
