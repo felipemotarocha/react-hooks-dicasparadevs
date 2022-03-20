@@ -1,55 +1,34 @@
-import { useReducer, useState } from "react";
+import { useState, useCallback } from "react";
 
-const reducer = (state, action) => {
-  switch (action.type) {
-    case "add-task":
-      return {
-        ...state,
-        tasks: [...state.tasks, { name: action.payload, isCompleted: false }],
-        tasksCount: state.tasksCount + 1,
-      };
-    case "toggle-task":
-      return {
-        ...state,
-        tasks: state.tasks.map((item, index) =>
-          index === action.payload
-            ? { ...item, isCompleted: !item.isCompleted }
-            : item
-        ),
-      };
-    default:
-      return state;
-  }
-};
+import List from "./List";
 
 const App = () => {
-  const [state, dispatch] = useReducer(reducer, { tasks: [], tasksCount: 0 });
+  const [text, setText] = useState("");
+  const [resourceType, setResourceType] = useState("posts");
 
-  const [inputValue, setInputValue] = useState("");
+  const getItems = useCallback(
+    async (number) => {
+      console.log("getItems is being called!");
+      console.log({ number });
+      const response = await fetch(
+        `https://jsonplaceholder.typicode.com/${resourceType}`
+      );
+      const responseJSON = await response.json();
+
+      return responseJSON;
+    },
+    [resourceType]
+  );
 
   return (
     <div>
-      <input
-        value={inputValue}
-        onChange={(e) => setInputValue(e.target.value)}
-      />
-      <button
-        onClick={() => {
-          dispatch({ type: "add-task", payload: inputValue });
-          setInputValue("");
-        }}
-      >
-        Adicionar
-      </button>
+      <input value={text} onChange={(e) => setText(e.target.value)} />
 
-      {state.tasks.map((task, index) => (
-        <p
-          onClick={() => dispatch({ type: "toggle-task", payload: index })}
-          style={{ textDecoration: task.isCompleted ? "line-through" : "none" }}
-        >
-          {task.name}
-        </p>
-      ))}
+      <button onClick={() => setResourceType("posts")}>Posts</button>
+      <button onClick={() => setResourceType("comments")}>Comments</button>
+      <button onClick={() => setResourceType("todos")}>Todos</button>
+
+      <List getItems={getItems} />
     </div>
   );
 };
